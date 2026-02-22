@@ -3,14 +3,23 @@
 <head>
     <title>DO NOT SNITCH</title>
     <style>
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             margin: 0;
             background: black;
             font-family: 'Courier New', monospace;
             color: #00ff00;
         }
-        canvas { position: fixed; top: 0; left: 0; z-index: 0; }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
 
         .section {
             position: relative;
@@ -65,39 +74,85 @@
             animation: glitchBottom 1.5s infinite linear alternate-reverse;
         }
 
-        @keyframes glitchTop { 0% { transform: translate(3px,-3px); } 100% { transform: translate(-3px,3px); } }
-        @keyframes glitchBottom { 0% { transform: translate(-3px,0); } 100% { transform: translate(3px,0); } }
-        @keyframes flicker { 0%,18%,22%,25%,53%,57%,100% { opacity: 1; } 20%,24%,55% { opacity: 0.4; } }
-
-        .members-title { font-size: 90px; margin-bottom: 30px; text-shadow: 0 0 20px lime; }
-        .member-name { font-size: 50px; margin: 10px 0; letter-spacing: 5px; }
-        .loading { font-size: 30px; }
-        .ip-box { margin-top: 20px; font-size: 20px; }
-        .hidden { display: none; }
-
-        /* SCREEN SHAKE */
-        @keyframes shake {
-            0% { transform: translate(0,0); } 10% { transform: translate(-10px,5px); } 20% { transform: translate(10px,-5px); }
-            30% { transform: translate(-10px,5px); } 40% { transform: translate(10px,-5px); } 50% { transform: translate(-5px,5px); }
-            60% { transform: translate(5px,-5px); } 70% { transform: translate(-5px,5px); } 80% { transform: translate(5px,-5px); }
-            90% { transform: translate(-2px,2px); } 100% { transform: translate(0,0); }
+        @keyframes glitchTop {
+            0% { transform: translate(3px,-3px); }
+            100% { transform: translate(-3px,3px); }
         }
-        .shake { animation: shake 0.5s infinite; }
+
+        @keyframes glitchBottom {
+            0% { transform: translate(-3px,0); }
+            100% { transform: translate(3px,0); }
+        }
+
+        @keyframes flicker {
+            0%,18%,22%,25%,53%,57%,100% { opacity: 1; }
+            20%,24%,55% { opacity: 0.4; }
+        }
+
+        .members-title {
+            font-size: 90px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px lime;
+        }
+
+        .member-name {
+            font-size: 50px;
+            margin: 10px 0;
+            letter-spacing: 5px;
+        }
+
+        .loading {
+            font-size: 30px;
+        }
+
+        .ip-box {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* SCREEN SHAKE EFFECT */
+        @keyframes shake {
+            0% { transform: translate(0, 0); }
+            10% { transform: translate(-10px, 5px); }
+            20% { transform: translate(10px, -5px); }
+            30% { transform: translate(-10px, 5px); }
+            40% { transform: translate(10px, -5px); }
+            50% { transform: translate(-5px, 5px); }
+            60% { transform: translate(5px, -5px); }
+            70% { transform: translate(-5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            90% { transform: translate(-2px, 2px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .shake {
+            animation: shake 0.5s infinite;
+        }
+
     </style>
 </head>
-<body>
+<body onclick="goFullscreen()">
 
 <canvas id="matrix"></canvas>
 
-<!-- CLICK TO ENTER -->
-<div class="section" id="enterScreen">
-    <div class="loading">CLICK TO ENTER</div>
+<!-- LOADING -->
+<div class="section" id="loadingScreen">
+    <div class="loading">
+        INITIALIZING SYSTEM...<br>
+        BYPASSING FIREWALL...<br>
+        TRACKING IP ADDRESS...
+    </div>
+    <div class="ip-box" id="ipDisplay"></div>
 </div>
 
 <!-- MAIN -->
 <div class="section hidden" id="mainContent">
     <div class="title">ABOVE ALL</div>
-    <div class="names">AIM, VYZ, LANCE</div>
+    <div class="names">AIM , LANCE</div>
     <div class="glitch">DO NOT SNITCH!!!</div>
 </div>
 
@@ -106,65 +161,79 @@
     <div class="members-title">MEMBERS:</div>
     <div class="member-name">AIM</div>
     <div class="member-name">LANCE</div>
-    <div class="member-name">VYZ</div>
 </div>
 
-<!-- SPOTIFY EMBED (hidden) -->
-<iframe id="spotifyPlayer" src="https://open.spotify.com/embed/track/7ghs3nO2LtovXUo7FGYqUJ" width="0" height="0" frameborder="0" allowtransparency="true" allow="autoplay; encrypted-media"></iframe>
+<!-- DEMON TIME MUSIC -->
+<audio autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_1c3f3c0b9e.mp3?filename=demon-ambient-113591.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
 
-const letters = "アァイィウヴAIMエカキクLANCEケコサシVYZスセソ0123456789";
-const fontSize = 16;
-const columns = canvas.width / fontSize;
-const drops = [];
-for(let x=0;x<columns;x++) drops[x]=1;
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
 
-function draw(){
-    ctx.fillStyle="rgba(0,0,0,0.05)";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle="#0F0";
-    ctx.font=fontSize+"px monospace";
-    for(let i=0;i<drops.length;i++){
-        const text=letters.charAt(Math.floor(Math.random()*letters.length));
-        ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-        if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0;
-        drops[i]++;
+    const letters = "アァイィウヴエカキクケコサシスセソ0123456789";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+
+    function draw() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#0F0";
+        ctx.font = fontSize + "px monospace";
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = letters.charAt(Math.floor(Math.random() * letters.length));
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+                drops[i] = 0;
+
+            drops[i]++;
+        }
     }
-}
-setInterval(draw,33);
 
-function randomIP(){
-    return Math.floor(Math.random()*255)+"."+Math.floor(Math.random()*255)+"."+Math.floor(Math.random()*255)+"."+Math.floor(Math.random()*255);
-}
-document.body.addEventListener("click", enterPage, {once:true});
-document.getElementById("enterScreen").innerHTML+="<br><div class='ip-box'>IP FOUND: "+randomIP()+"<br>LOCATION: UNKNOWN<br>ACCESS: GRANTED</div>";
+    setInterval(draw, 33);
 
-function enterPage(){
-    document.getElementById("enterScreen").classList.add("hidden");
-    document.getElementById("mainContent").classList.remove("hidden");
-    document.getElementById("membersSection").classList.remove("hidden");
-
-    document.getElementById("mainContent").classList.add("shake");
-    document.getElementById("membersSection").classList.add("shake");
-
-    // Auto scroll to members
-    setTimeout(()=>{document.getElementById("membersSection").scrollIntoView({behavior:"smooth"});},3000);
-
-    // Play Spotify embed (browser may require interaction)
-    const spotify = document.getElementById("spotifyPlayer");
-    spotify.contentWindow.postMessage({method:'play'},'*');
-}
-
-function goFullscreen(){
-    if(document.documentElement.requestFullscreen){
-        document.documentElement.requestFullscreen();
+    function randomIP() {
+        return Math.floor(Math.random()*255) + "." +
+               Math.floor(Math.random()*255) + "." +
+               Math.floor(Math.random()*255) + "." +
+               Math.floor(Math.random()*255);
     }
-}
+
+    document.getElementById("ipDisplay").innerHTML =
+        "IP FOUND: " + randomIP() + "<br>LOCATION: UNKNOWN<br>ACCESS: GRANTED";
+
+    setTimeout(() => {
+        document.getElementById("loadingScreen").classList.add("hidden");
+        document.getElementById("mainContent").classList.remove("hidden");
+        document.getElementById("membersSection").classList.remove("hidden");
+
+        // APPLY SHAKE
+        document.getElementById("mainContent").classList.add("shake");
+        document.getElementById("membersSection").classList.add("shake");
+
+        // AUTO SMOOTH SCROLL TO MEMBERS
+        setTimeout(() => {
+            document.getElementById("membersSection")
+                .scrollIntoView({ behavior: "smooth" });
+        }, 3000);
+
+    }, 4000);
+
+    function goFullscreen() {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        }
+    }
 </script>
 
 </body>
