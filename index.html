@@ -164,12 +164,17 @@
      <div class="member-name">VYZ</div>
 </div>
 
-<!-- DEMON TIME MUSIC -->
-<audio autoplay loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_1c3f3c0b9e.mp3?filename=demon-ambient-113591.mp3" type="audio/mpeg">
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_1c3f3c0b9e.mp3?filename=demon-ambient-113591.mp3" type="audio/mpeg">
 </audio>
 
 <script>
+  // Start music kapag nag-click ang user sa page
+  document.body.addEventListener("click", () => {
+    const music = document.getElementById("bgMusic");
+    if (music.paused) music.play();
+  }, { once: true });
+</script>
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
 
