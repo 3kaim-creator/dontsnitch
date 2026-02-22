@@ -3,10 +3,7 @@
 <head>
     <title>DO NOT SNITCH</title>
     <style>
-        html {
-            scroll-behavior: smooth;
-        }
-
+        html { scroll-behavior: smooth; }
         body {
             margin: 0;
             background: black;
@@ -90,50 +87,8 @@
             20%,24%,55% { opacity: 0.4; }
         }
 
-        .members-title {
-            font-size: 90px;
-            margin-bottom: 30px;
-            text-shadow: 0 0 20px lime;
-        }
+        .hidden { display: none; }
 
-        .member-name {
-            font-size: 50px;
-            margin: 10px 0;
-            letter-spacing: 5px;
-        }
-
-        .loading {
-            font-size: 30px;
-        }
-
-        .ip-box {
-            margin-top: 20px;
-            font-size: 20px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        @keyframes shake {
-            0% { transform: translate(0, 0); }
-            10% { transform: translate(-10px, 5px); }
-            20% { transform: translate(10px, -5px); }
-            30% { transform: translate(-10px, 5px); }
-            40% { transform: translate(10px, -5px); }
-            50% { transform: translate(-5px, 5px); }
-            60% { transform: translate(5px, -5px); }
-            70% { transform: translate(-5px, 5px); }
-            80% { transform: translate(5px, -5px); }
-            90% { transform: translate(-2px, 2px); }
-            100% { transform: translate(0, 0); }
-        }
-
-        .shake {
-            animation: shake 0.5s infinite;
-        }
-
-        /* Spotify Button */
         #playSpotify {
             position: fixed;
             bottom: 30px;
@@ -147,102 +102,105 @@
             cursor: pointer;
             box-shadow: 0 0 15px #00ff00;
         }
+
+        #spotifyPlayer {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
 
 <canvas id="matrix"></canvas>
 
-<!-- LOADING -->
 <div class="section" id="loadingScreen">
-    <div class="loading">
+    <div>
         INITIALIZING SYSTEM...<br>
         BYPASSING FIREWALL...<br>
         TRACKING IP ADDRESS...
     </div>
-    <div class="ip-box" id="ipDisplay"></div>
+    <div id="ipDisplay"></div>
 </div>
 
-<!-- MAIN -->
 <div class="section hidden" id="mainContent">
     <div class="title">ABOVE ALL</div>
     <div class="names">AIM, VYZ, LANCE</div>
     <div class="glitch">DO NOT SNITCH!!!</div>
 </div>
 
-<!-- MEMBERS -->
-<div class="section hidden" id="membersSection">
-    <div class="members-title">MEMBERS:</div>
-    <div class="member-name">DIVINO</div>
-    <div class="member-name">444AXEL</div>
-    <div class="member-name">LEY</div>
-    <div class="member-name">KIAN RUNSYOUALL</div>
-    <div class="member-name">HULYO DIABLO</div>
-</div>
-
-<!-- SPOTIFY PLAY BUTTON -->
 <div id="playSpotify">CLICK TO PLAY: WE DON'T SNITCH</div>
 
-<!-- Hidden Spotify Embed -->
-<iframe id="spotifyPlayer" src="https://open.spotify.com/embed/track/7ghs3nO2LtovXUo7FGYqUJ" width="0" height="0" frameborder="0" allowtransparency="true" allow="autoplay; encrypted-media"></iframe>
+<!-- Spotify Player Container -->
+<div id="spotifyPlayer"></div>
+
+<!-- Spotify IFrame API -->
+<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 
 <script>
-    // MATRIX CODE
-    const canvas = document.getElementById("matrix");
-    const ctx = canvas.getContext("2d");
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-    const letters = "アァイィウヴエカキクケコサシスセソ0123456789";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = [];
-    for(let x=0;x<columns;x++) drops[x]=1;
-    function draw() {
-        ctx.fillStyle = "rgba(0,0,0,0.05)";
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle="#0F0";
-        ctx.font=fontSize+"px monospace";
-        for(let i=0;i<drops.length;i++){
-            const text = letters.charAt(Math.floor(Math.random()*letters.length));
-            ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-            if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0;
-            drops[i]++;
-        }
+/* MATRIX EFFECT */
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const letters = "アァイィウヴエカキクケコサシスセソ0123456789";
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+const drops = [];
+
+for(let x=0;x<columns;x++) drops[x]=1;
+
+function draw() {
+    ctx.fillStyle = "rgba(0,0,0,0.05)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="#0F0";
+    ctx.font=fontSize+"px monospace";
+
+    for(let i=0;i<drops.length;i++){
+        const text = letters.charAt(Math.floor(Math.random()*letters.length));
+        ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+        if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0;
+        drops[i]++;
     }
-    setInterval(draw,33);
+}
+setInterval(draw,33);
 
-    function randomIP() {
-        return Math.floor(Math.random()*255) + "." +
-               Math.floor(Math.random()*255) + "." +
-               Math.floor(Math.random()*255) + "." +
-               Math.floor(Math.random()*255);
-    }
-    document.getElementById("ipDisplay").innerHTML =
-        "IP FOUND: " + randomIP() + "<br>LOCATION: UNKNOWN<br>ACCESS: GRANTED";
+/* FAKE IP */
+function randomIP() {
+    return Math.floor(Math.random()*255) + "." +
+           Math.floor(Math.random()*255) + "." +
+           Math.floor(Math.random()*255) + "." +
+           Math.floor(Math.random()*255);
+}
+document.getElementById("ipDisplay").innerHTML =
+"IP FOUND: " + randomIP() + "<br>LOCATION: UNKNOWN<br>ACCESS: GRANTED";
 
-    setTimeout(()=>{
-        document.getElementById("loadingScreen").classList.add("hidden");
-        document.getElementById("mainContent").classList.remove("hidden");
-        document.getElementById("membersSection").classList.remove("hidden");
-        document.getElementById("mainContent").classList.add("shake");
-        document.getElementById("membersSection").classList.add("shake");
-        setTimeout(()=>{
-            document.getElementById("membersSection").scrollIntoView({behavior:"smooth"});
-        },3000);
-    },4000);
+setTimeout(()=>{
+    document.getElementById("loadingScreen").classList.add("hidden");
+    document.getElementById("mainContent").classList.remove("hidden");
+},4000);
 
-    function goFullscreen() {
-        if(document.documentElement.requestFullscreen){
-            document.documentElement.requestFullscreen();
-        }
-    }
+/* SPOTIFY API */
+window.onSpotifyIframeApiReady = (IFrameAPI) => {
+    const element = document.getElementById('spotifyPlayer');
+    const options = {
+        uri: 'spotify:track:7ghs3nO2LtovXUo7FGYqUJ',
+        width: 300,
+        height: 80
+    };
 
-    // SPOTIFY CLICK TO PLAY
-    document.getElementById("playSpotify").addEventListener("click", ()=>{
-        const iframe = document.getElementById("spotifyPlayer");
-        iframe.contentWindow.postMessage({method:"play"}, "*");
-        document.getElementById("playSpotify").style.display="none";
-    });
+    const callback = (EmbedController) => {
+        document.getElementById("playSpotify").addEventListener("click", () => {
+            EmbedController.play();
+            document.getElementById("playSpotify").style.display="none";
+        });
+    };
+
+    IFrameAPI.createController(element, options, callback);
+};
 </script>
+
 </body>
 </html>
