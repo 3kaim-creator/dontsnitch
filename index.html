@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DO NOT SNITCH</title>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: black;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .section {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 110px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            text-shadow: 0 0 20px #00ff00, 0 0 50px lime;
+            animation: flicker 2s infinite;
+        }
+
+        .names {
+            font-size: 55px;
+            margin-top: 15px;
+            letter-spacing: 6px;
+            color: #00ffaa;
+            text-shadow: 0 0 15px #00ffaa;
+        }
+
+        .glitch {
+            font-size: 75px;
+            margin-top: 50px;
+            position: relative;
+            animation: flicker 2s infinite;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: "DO NOT SNITCH!!!";
+            position: absolute;
+            left: 0;
+        }
+
+        .glitch::before {
+            color: red;
+            clip-path: inset(0 0 50% 0);
+            animation: glitchTop 1s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            color: blue;
+            clip-path: inset(50% 0 0 0);
+            animation: glitchBottom 1.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitchTop {
+            0% { transform: translate(3px,-3px); }
+            100% { transform: translate(-3px,3px); }
+        }
+
+        @keyframes glitchBottom {
+            0% { transform: translate(-3px,0); }
+            100% { transform: translate(3px,0); }
+        }
+
+        @keyframes flicker {
+            0%,18%,22%,25%,53%,57%,100% { opacity: 1; }
+            20%,24%,55% { opacity: 0.4; }
+        }
+
+        .members-title {
+            font-size: 90px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px lime;
+        }
+
+        .member-name {
+            font-size: 50px;
+            margin: 10px 0;
+            letter-spacing: 5px;
+        }
+
+        .loading {
+            font-size: 30px;
+        }
+
+        .ip-box {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body onclick="goFullscreen()">
+
+<canvas id="matrix"></canvas>
+
+<!-- LOADING -->
+<div class="section" id="loadingScreen">
+    <div class="loading">
+        INITIALIZING SYSTEM...<br>
+        BYPASSING FIREWALL...<br>
+        TRACKING IP ADDRESS...
+    </div>
+    <div class="ip-box" id="ipDisplay"></div>
+</div>
+
+<!-- MAIN -->
+<div class="section hidden" id="mainContent">
+    <div class="title">ABOVE ALL</div>
+    <div class="names">AIM , LANCE</div>
+    <div class="glitch">DO NOT SNITCH!!!</div>
+</div>
+
+<!-- MEMBERS -->
+<div class="section hidden" id="membersSection">
+    <div class="members-title">MEMBERS:</div>
+    <div class="member-name">AIM</div>
+    <div class="member-name">LANCE</div>
+</div>
+
+<audio autoplay>
+    <source src="https://www.soundjay.com/mechanical/sounds/computer-processing-1.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const letters = "アァイィウヴエカキクケコサシスセソ0123456789";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+
+    function draw() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#0F0";
+        ctx.font = fontSize + "px monospace";
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = letters.charAt(Math.floor(Math.random() * letters.length));
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+                drops[i] = 0;
+
+            drops[i]++;
+        }
+    }
+
+    setInterval(draw, 33);
+
+    function randomIP() {
+        return Math.floor(Math.random()*255) + "." +
+               Math.floor(Math.random()*255) + "." +
+               Math.floor(Math.random()*255) + "." +
+               Math.floor(Math.random()*255);
+    }
+
+    document.getElementById("ipDisplay").innerHTML =
+        "IP FOUND: " + randomIP() + "<br>LOCATION: UNKNOWN<br>ACCESS: GRANTED";
+
+    setTimeout(() => {
+        document.getElementById("loadingScreen").classList.add("hidden");
+        document.getElementById("mainContent").classList.remove("hidden");
+        document.getElementById("membersSection").classList.remove("hidden");
+
+        // AUTO SMOOTH SCROLL TO MEMBERS
+        setTimeout(() => {
+            document.getElementById("membersSection")
+                .scrollIntoView({ behavior: "smooth" });
+        }, 3000);
+
+    }, 4000);
+
+    function goFullscreen() {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        }
+    }
+</script>
+
+</body>
+</html>
