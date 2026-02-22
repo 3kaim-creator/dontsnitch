@@ -113,6 +113,26 @@
         .hidden {
             display: none;
         }
+
+        /* SCREEN SHAKE EFFECT */
+        @keyframes shake {
+            0% { transform: translate(0, 0); }
+            10% { transform: translate(-10px, 5px); }
+            20% { transform: translate(10px, -5px); }
+            30% { transform: translate(-10px, 5px); }
+            40% { transform: translate(10px, -5px); }
+            50% { transform: translate(-5px, 5px); }
+            60% { transform: translate(5px, -5px); }
+            70% { transform: translate(-5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            90% { transform: translate(-2px, 2px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .shake {
+            animation: shake 0.5s infinite;
+        }
+
     </style>
 </head>
 <body onclick="goFullscreen()">
@@ -132,7 +152,7 @@
 <!-- MAIN -->
 <div class="section hidden" id="mainContent">
     <div class="title">ABOVE ALL</div>
-    <div class="names">AIM , LANCE</div>
+    <div class="names">AIM, VYZ, LANCE</div>
     <div class="glitch">DO NOT SNITCH!!!</div>
 </div>
 
@@ -141,10 +161,12 @@
     <div class="members-title">MEMBERS:</div>
     <div class="member-name">AIM</div>
     <div class="member-name">LANCE</div>
+     <div class="member-name">VYZ</div>
 </div>
 
-<audio autoplay>
-    <source src="https://www.soundjay.com/mechanical/sounds/computer-processing-1.mp3" type="audio/mpeg">
+<!-- DEMON TIME MUSIC -->
+<audio autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_1c3f3c0b9e.mp3?filename=demon-ambient-113591.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -195,6 +217,10 @@
         document.getElementById("loadingScreen").classList.add("hidden");
         document.getElementById("mainContent").classList.remove("hidden");
         document.getElementById("membersSection").classList.remove("hidden");
+
+        // APPLY SHAKE
+        document.getElementById("mainContent").classList.add("shake");
+        document.getElementById("membersSection").classList.add("shake");
 
         // AUTO SMOOTH SCROLL TO MEMBERS
         setTimeout(() => {
