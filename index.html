@@ -12,6 +12,7 @@
             background: black;
             font-family: 'Courier New', monospace;
             color: #00ff00;
+            overflow-x: hidden;
         }
 
         canvas {
@@ -114,7 +115,6 @@
             display: none;
         }
 
-        /* SCREEN SHAKE EFFECT */
         @keyframes shake {
             0% { transform: translate(0, 0); }
             10% { transform: translate(-10px, 5px); }
@@ -133,9 +133,23 @@
             animation: shake 0.5s infinite;
         }
 
+        /* Spotify Button */
+        #playSpotify {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+            background: black;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 15px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #00ff00;
+        }
     </style>
 </head>
-<body onclick="goFullscreen()">
+<body>
 
 <canvas id="matrix"></canvas>
 
@@ -152,7 +166,7 @@
 <!-- MAIN -->
 <div class="section hidden" id="mainContent">
     <div class="title">ABOVE ALL</div>
-    <div class="names">AIM,VYZ,LANCE</div>
+    <div class="names">AIM, VYZ, LANCE</div>
     <div class="glitch">DO NOT SNITCH!!!</div>
 </div>
 
@@ -164,41 +178,38 @@
     <div class="member-name">LEY</div>
     <div class="member-name">KIAN RUNSYOUALL</div>
     <div class="member-name">HULYO DIABLO</div>
-    
 </div>
+
+<!-- SPOTIFY PLAY BUTTON -->
+<div id="playSpotify">CLICK TO PLAY: WE DON'T SNITCH</div>
+
+<!-- Hidden Spotify Embed -->
+<iframe id="spotifyPlayer" src="https://open.spotify.com/embed/track/7ghs3nO2LtovXUo7FGYqUJ" width="0" height="0" frameborder="0" allowtransparency="true" allow="autoplay; encrypted-media"></iframe>
+
 <script>
+    // MATRIX CODE
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
-
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-
     const letters = "アァイィウヴエカキクケコサシスセソ0123456789";
     const fontSize = 16;
     const columns = canvas.width / fontSize;
     const drops = [];
-
-    for (let x = 0; x < columns; x++) drops[x] = 1;
-
+    for(let x=0;x<columns;x++) drops[x]=1;
     function draw() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = "#0F0";
-        ctx.font = fontSize + "px monospace";
-
-        for (let i = 0; i < drops.length; i++) {
-            const text = letters.charAt(Math.floor(Math.random() * letters.length));
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
-                drops[i] = 0;
-
+        ctx.fillStyle = "rgba(0,0,0,0.05)";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle="#0F0";
+        ctx.font=fontSize+"px monospace";
+        for(let i=0;i<drops.length;i++){
+            const text = letters.charAt(Math.floor(Math.random()*letters.length));
+            ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+            if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0;
             drops[i]++;
         }
     }
-
-    setInterval(draw, 33);
+    setInterval(draw,33);
 
     function randomIP() {
         return Math.floor(Math.random()*255) + "." +
@@ -206,58 +217,32 @@
                Math.floor(Math.random()*255) + "." +
                Math.floor(Math.random()*255);
     }
-
     document.getElementById("ipDisplay").innerHTML =
         "IP FOUND: " + randomIP() + "<br>LOCATION: UNKNOWN<br>ACCESS: GRANTED";
 
-    setTimeout(() => {
+    setTimeout(()=>{
         document.getElementById("loadingScreen").classList.add("hidden");
         document.getElementById("mainContent").classList.remove("hidden");
         document.getElementById("membersSection").classList.remove("hidden");
-
-        // APPLY SHAKE
         document.getElementById("mainContent").classList.add("shake");
         document.getElementById("membersSection").classList.add("shake");
-
-        // AUTO SMOOTH SCROLL TO MEMBERS
-        setTimeout(() => {
-            document.getElementById("membersSection")
-                .scrollIntoView({ behavior: "smooth" });
-        }, 3000);
-
-    }, 4000);
+        setTimeout(()=>{
+            document.getElementById("membersSection").scrollIntoView({behavior:"smooth"});
+        },3000);
+    },4000);
 
     function goFullscreen() {
-        if (document.documentElement.requestFullscreen) {
+        if(document.documentElement.requestFullscreen){
             document.documentElement.requestFullscreen();
         }
     }
-    // MUSIC PLAY
-document.getElementById("musicButton").addEventListener("click", function() {
-    const music = document.getElementById("bgMusic");
-    music.play();
-    this.style.display = "none";
-});
-</script>
-<!-- CLICK TO PLAY MUSIC -->
-<div id="musicButton" style="
-position: fixed;
-bottom: 30px;
-right: 30px;
-z-index: 999;
-background: black;
-color: #00ff00;
-border: 2px solid #00ff00;
-padding: 15px 25px;
-font-size: 18px;
-cursor: pointer;
-box-shadow: 0 0 15px #00ff00;
-">
-CLICK TO PLAY: WE DON'T SNITCH
-</div>
 
-<audio id="bgMusic" loop>
-    <source src="wedontsnitch.mp3" type="audio/mpeg">
-</audio>
+    // SPOTIFY CLICK TO PLAY
+    document.getElementById("playSpotify").addEventListener("click", ()=>{
+        const iframe = document.getElementById("spotifyPlayer");
+        iframe.contentWindow.postMessage({method:"play"}, "*");
+        document.getElementById("playSpotify").style.display="none";
+    });
+</script>
 </body>
 </html>
